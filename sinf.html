@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5-sinf — EduNova</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #0b0d24; --panel: #14173a; --panel2: #1b1f4d; --violet: #6b4dff; --cyan: #1fd8e8; --magenta: #ff3df2;
+    --text: #eef0ff; --dim: #9aa0d4; --line: #2d3270; --ok: #3dffa8; --bad: #ff5c7a; --gold: #ffd35c;
+    --display: "Orbitron", "Trebuchet MS", sans-serif;
+    --body: "Exo 2", "Segoe UI", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--body); color: var(--text); line-height: 1.6; font-size: 17px; min-height: 100vh;
+    background: radial-gradient(ellipse at 10% 0%, rgba(107,77,255,.35), transparent 55%), radial-gradient(ellipse at 95% 60%, rgba(255,61,242,.18), transparent 50%), var(--void); }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; }
+  :focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; }
+  .wrap { width: min(1100px, 92%); margin-inline: auto; }
+
+  header { border-bottom: 1px solid var(--line); }
+  .nav { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; }
+  .logo { font-family: var(--display); font-weight: 800; letter-spacing: .05em; background: linear-gradient(90deg, var(--cyan), var(--magenta)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .nav a.back { color: var(--dim); font-weight: 600; }
+  .nav a.back:hover { color: var(--cyan); }
+
+  .hero { padding: 56px 0 30px; display: flex; gap: 30px; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; }
+  h1 { font-family: var(--display); font-weight: 800; font-size: clamp(2rem, 6vw, 3.6rem); line-height: 1.1; }
+  .teacher { color: var(--dim); margin-top: 10px; }
+  .teacher b { color: var(--text); }
+  .total { background: var(--panel); border: 1px solid var(--line); padding: 14px 24px; border-radius: 16px; text-align: center; }
+  .total b { display: block; font-family: var(--display); font-size: 1.8rem; color: var(--gold); }
+  .total span { color: var(--dim); font-size: .9rem; }
+
+  section { padding: 34px 0; }
+  h2 { font-family: var(--display); font-size: 1.3rem; margin-bottom: 6px; }
+  .lead { color: var(--dim); margin-bottom: 20px; }
+
+  /* Reyting */
+  .board { display: grid; gap: 10px; }
+  .row { display: grid; grid-template-columns: 44px 44px 1fr auto auto; gap: 14px; align-items: center; padding: 12px 16px; background: var(--panel); border: 2px solid transparent; border-radius: 14px; width: 100%; text-align: left; color: inherit; cursor: pointer; }
+  .row:hover { border-color: var(--line); }
+  .row.me { border-color: var(--cyan); background: var(--panel2); }
+  .rank { font-family: var(--display); font-weight: 800; color: var(--dim); text-align: center; font-size: 1.1rem; }
+  .ava { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-family: var(--display); font-weight: 800; color: #fff; }
+  .nm { font-weight: 700; }
+  .nm small { display: block; color: var(--dim); font-weight: 400; font-size: .85rem; }
+  .dm { font-family: var(--display); font-weight: 800; color: var(--gold); white-space: nowrap; }
+  .pick { font-size: .8rem; font-weight: 700; color: var(--cyan); min-width: 70px; text-align: right; }
+
+  /* Testlar */
+  .meinfo { margin-bottom: 18px; padding: 12px 16px; border-radius: 12px; background: var(--panel); border-left: 4px solid var(--magenta); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+  .test { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .test .ic { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; font-family: var(--display); font-weight: 800; color: #fff; }
+  .test h3 { font-size: 1.12rem; }
+  .test .best { color: var(--dim); font-size: .92rem; min-height: 1.4em; }
+  .go { margin-top: auto; border: 0; border-radius: 999px; padding: 10px 18px; font-weight: 700; color: #fff; background: linear-gradient(90deg, var(--violet), var(--magenta)); cursor: pointer; }
+  .go:disabled { background: #3a3f78; color: #8c92c8; cursor: not-allowed; }
+  .go:not(:disabled):hover { filter: brightness(1.12); }
+
+  /* Test oynasi */
+  #quiz { position: fixed; inset: 0; z-index: 50; background: rgba(5,6,20,.92); display: none; overflow-y: auto; padding: 20px; }
+  #quiz.open { display: block; }
+  .qbox { width: min(640px, 100%); margin: 4vh auto; background: var(--panel); border: 1px solid var(--line); border-radius: 22px; padding: 28px; }
+  .qtop { display: flex; justify-content: space-between; color: var(--dim); font-size: .95rem; margin-bottom: 10px; }
+  .pbar { height: 6px; background: var(--line); border-radius: 6px; overflow: hidden; margin-bottom: 22px; }
+  .pbar span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--cyan), var(--magenta)); transition: width .3s; }
+  .q { font-size: 1.3rem; font-weight: 700; margin-bottom: 18px; line-height: 1.35; }
+  .opts { display: grid; gap: 10px; }
+  .opt { text-align: left; padding: 14px 16px; border-radius: 12px; border: 2px solid var(--line); background: var(--panel2); color: var(--text); font-size: 1.05rem; cursor: pointer; }
+  .opt:not(:disabled):hover { border-color: var(--cyan); }
+  .opt.ok { border-color: var(--ok); background: rgba(61,255,168,.15); }
+  .opt.no { border-color: var(--bad); background: rgba(255,92,122,.15); }
+  .opt:disabled { cursor: default; }
+  .fb { min-height: 1.6em; margin-top: 14px; font-weight: 700; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .btn { border: 0; border-radius: 999px; padding: 11px 22px; font-weight: 700; color: #fff; cursor: pointer; background: linear-gradient(90deg, var(--violet), var(--magenta)); }
+  .btn.ghost { background: none; border: 2px solid var(--line); color: var(--dim); }
+  .result { text-align: center; padding: 10px 0; }
+  .result h3 { font-family: var(--display); font-size: 1.5rem; margin-bottom: 6px; }
+  .gems { font-size: 2.6rem; margin: 16px 0 6px; letter-spacing: 6px; }
+  .gems span { display: inline-block; animation: pop .6s both; }
+  @keyframes pop { 0% { transform: scale(0) rotate(-40deg); opacity: 0; } 70% { transform: scale(1.3) rotate(8deg); } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+
+  footer { padding: 30px 0 50px; color: var(--dim); font-size: .9rem; text-align: center; }
+  footer button { background: none; border: 0; color: var(--dim); text-decoration: underline; cursor: pointer; font-size: .9rem; }
+
+  @media (max-width: 620px) {
+    .row { grid-template-columns: 34px 40px 1fr auto; gap: 10px; padding: 10px 12px; }
+    .pick { display: none; }
+    .qbox { padding: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="platform.html">EDUNOVA</a>
+    <a class="back" href="platform.html">← Platformaga qaytish</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <div>
+      <h1>5-sinf</h1>
+      <p class="teacher">Sinf rahbari: <b>Aziza Usmonovna</b></p>
+    </div>
+    <div class="total"><b id="classTotal">0</b><span>💎 sinfning umumiy olmoslari</span></div>
+  </div>
+
+  <section>
+    <h2>Sinf reytingi</h2>
+    <p class="lead">Ismingizni bosib tanlang, keyin testlarni yechishni boshlang.</p>
+    <div class="board" id="board"></div>
+  </section>
+
+  <section>
+    <h2>Testlar</h2>
+    <div class="meinfo" id="meinfo"></div>
+    <div class="grid" id="tests"></div>
+    <p class="lead" style="margin-top:18px">Har bir to'g'ri javob uchun 1 💎. Hamma javob to'g'ri bo'lsa, qo'shimcha 2 💎 beriladi. Testni qayta yechsangiz, eng yaxshi natijangiz hisoblanadi.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Natijalar shu brauzerda saqlanadi.<br><button id="reset" type="button">Hamma natijani tozalash</button></div>
+</footer>
+
+<div id="quiz" role="dialog" aria-modal="true" aria-label="Test"><div class="qbox" id="qbox"></div></div>
+
+<script>
+  /* ====== SINF A'ZOLARI — shu yerdan o'zgartiring ====== */
+  const students = ["S. Sherzod", "R. Aziymjon", "H. Nurmuhammad", "U. Bilol", "Begzod", "Umar Vosiye", "S. Umarbek", "B. Nazir", "Mustofo"];
+
+  /* ====== TESTLAR — [savol, [variantlar], to'g'ri javob raqami (0 dan boshlanadi)] ====== */
+  const tests = [
+    { id: "mat", t: "Matematika: amallar", ic: "×", col: "#6b4dff", q: [
+      ["7 × 8 nechaga teng?", ["54", "56", "64", "48"], 1],
+      ["144 ÷ 12 nechaga teng?", ["10", "11", "12", "14"], 2],
+      ["Tomoni 5 sm bo'lgan kvadratning perimetri nechaga teng?", ["10 sm", "15 sm", "20 sm", "25 sm"], 2],
+      ["1/2 + 1/2 nechaga teng?", ["1/4", "1", "2", "1/2"], 1],
+      ["Eng kichik tub son qaysi?", ["0", "1", "2", "3"], 2]
+    ]},
+    { id: "geo", t: "Geometriya", ic: "△", col: "#1fa8e8", q: [
+      ["Uchburchakda nechta burchak bor?", ["2", "3", "4", "5"], 1],
+      ["To'g'ri burchak necha gradus?", ["45°", "60°", "90°", "180°"], 2],
+      ["Aylananing diametri radiusidan necha marta katta?", ["1 marta", "2 marta", "3 marta", "4 marta"], 1],
+      ["Tomonlari 6 sm va 4 sm bo'lgan to'g'ri to'rtburchakning yuzi qancha?", ["10 sm²", "20 sm²", "24 sm²", "48 sm²"], 2],
+      ["Kubning nechta yog'i bor?", ["4", "6", "8", "12"], 1]
+    ]},
+    { id: "ona", t: "Ona tili", ic: "Aa", col: "#e8631f", q: [
+      ["Qaysi so'z ot?", ["chiroyli", "kitob", "yozmoq", "tez"], 1],
+      ["«Maktab» so'zida nechta unli tovush bor?", ["1", "2", "3", "4"], 1],
+      ["Sifat nimani bildiradi?", ["Predmetning belgisini", "Harakatni", "Sonni", "Predmet nomini"], 0],
+      ["«Bola» so'zining ko'plik shakli qaysi?", ["bolaar", "bolalr", "bolalar", "bolalarlar"], 2],
+      ["Darak gap oxiriga qanday belgi qo'yiladi?", ["Nuqta", "So'roq belgisi", "Undov belgisi", "Vergul"], 0]
+    ]},
+    { id: "eng", t: "Ingliz tili", ic: "En", col: "#d93a8a", q: [
+      ["«Apple» o'zbekchada nima?", ["nok", "olma", "uzum", "anor"], 1],
+      ["«Cat» so'zining tarjimasi qaysi?", ["it", "sigir", "mushuk", "ot"], 2],
+      ["I ___ a student.", ["am", "is", "are", "be"], 0],
+      ["«Red» qaysi rang?", ["ko'k", "yashil", "sariq", "qizil"], 3],
+      ["«Five» qaysi son?", ["3", "4", "5", "6"], 2]
+    ]},
+    { id: "tab", t: "Tabiatshunoslik", ic: "🌿", col: "#12a874", q: [
+      ["Quyosh tizimida nechta sayyora bor?", ["7", "8", "9", "10"], 1],
+      ["Suv necha gradusda qaynaydi?", ["50°", "80°", "100°", "120°"], 2],
+      ["Qaysi hayvon sutemizuvchi?", ["Sazan", "Sigir", "Ilon", "Tovuq"], 1],
+      ["O'simliklar fotosintezda qaysi gazni chiqaradi?", ["Kislorod", "Vodorod", "Metan", "Is gazi"], 0],
+      ["Yerning tabiiy yo'ldoshi nima?", ["Quyosh", "Mars", "Oy", "Yulduz"], 2]
+    ]},
+    { id: "uz", t: "O'zbekiston bilan tanishuv", ic: "UZ", col: "#1f6fe8", q: [
+      ["O'zbekistonning poytaxti qaysi shahar?", ["Samarqand", "Toshkent", "Buxoro", "Namangan"], 1],
+      ["Mustaqillik kuni qachon nishonlanadi?", ["1 sentyabr", "21 mart", "8 dekabr", "1 yanvar"], 0],
+      ["Navro'z bayrami qachon nishonlanadi?", ["1 may", "21 mart", "9 may", "31 dekabr"], 1],
+      ["O'zbekiston bayrog'ida qaysi ranglar bor?", ["Faqat qizil va oq", "Ko'k, oq, yashil va qizil chiziqlar", "Faqat yashil", "Sariq va qora"], 1],
+      ["Alisher Navoiy kim bo'lgan?", ["Buyuk shoir va mutafakkir", "Sayyoh", "Harbiy qo'mondon", "Rassom"], 0]
+    ]},
+    { id: "mantiq", t: "Mantiq va zakovat", ic: "?", col: "#8a4dff", q: [
+      ["2, 4, 6, ... qatorda keyingi son qaysi?", ["7", "8", "9", "10"], 1],
+      ["Haftada necha kun bor?", ["5", "6", "7", "8"], 2],
+      ["Bir yilda nechta oy bor?", ["10", "11", "12", "13"], 2],
+      ["Bir soatda necha daqiqa bor?", ["30", "60", "90", "100"], 1],
+      ["Qaysi son juft?", ["7", "9", "12", "15"], 2]
+    ]},
+    { id: "inf", t: "Informatika", ic: "</>", col: "#c23a3a", q: [
+      ["Klaviatura qanday qurilma?", ["Kiritish qurilmasi", "Chiqarish qurilmasi", "Xotira", "Printer"], 0],
+      ["Sichqoncha nima uchun kerak?", ["Ovoz chiqarish", "Kursorni boshqarish", "Rasm chop etish", "Elektr berish"], 1],
+      ["1 bayt necha bitga teng?", ["2", "4", "8", "16"], 2],
+      ["Qaysi biri brauzer?", ["Word", "Excel", "Paint", "Chrome"], 3],
+      ["Ctrl + C tugmalari nima qiladi?", ["Nusxa oladi", "O'chiradi", "Saqlaydi", "Yopadi"], 0]
+    ]}
+  ];
+
+  /* ====== Xotira ====== */
+  const $ = id => document.getElementById(id);
+  let mem = {};
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return k in mem ? mem[k] : d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { mem[k] = v; } }
+  };
+  let me = store.get('sinf_me', null);
+  let res = store.get('sinf_res', {});       // { ism: { testId: eng yaxshi to'g'ri javoblar soni } }
+  if (!students.includes(me)) me = null;
+
+  const gems = c => c + (c === 5 ? 2 : 0);
+  const diamonds = name => Object.values(res[name] || {}).reduce((s, c) => s + gems(c), 0);
+  const colors = ["#6b4dff", "#1fa8e8", "#e8631f", "#d93a8a", "#12a874", "#8a4dff", "#c23a3a", "#1f6fe8", "#b8860b"];
+
+  /* ====== Reyting ====== */
+  function renderBoard() {
+    const sorted = students.map((n, i) => ({ n, i, d: diamonds(n), done: Object.keys(res[n] || {}).length }))
+      .sort((a, b) => b.d - a.d || a.i - b.i);
+    const medal = ["🥇", "🥈", "🥉"];
+    $('board').innerHTML = sorted.map((s, r) => `
+      <button class="row ${s.n === me ? 'me' : ''}" data-name="${s.n}" aria-pressed="${s.n === me}">
+        <span class="rank">${s.d > 0 && r < 3 ? medal[r] : r + 1}</span>
+        <span class="ava" style="background:${colors[s.i % colors.length]}">${s.n.trim()[0]}</span>
+        <span class="nm">${s.n}<small>${s.done} / ${tests.length} test</small></span>
+        <span class="dm">${s.d} 💎</span>
+        <span class="pick">${s.n === me ? '✓ Siz' : 'Tanlash'}</span>
+      </button>`).join('');
+    $('classTotal').textContent = students.reduce((s, n) => s + diamonds(n), 0);
+  }
+  $('board').addEventListener('click', e => {
+    const b = e.target.closest('.row'); if (!b) return;
+    me = b.dataset.name; store.set('sinf_me', me);
+    renderAll();
+  });
+
+  /* ====== Testlar ro'yxati ====== */
+  function renderTests() {
+    $('meinfo').innerHTML = me
+      ? `Siz: <b>${me}</b> · jami <b>${diamonds(me)} 💎</b>`
+      : "Avval yuqoridagi ro'yxatdan ismingizni tanlang. Shundan keyin testlar ochiladi.";
+    $('tests').innerHTML = tests.map((t, i) => {
+      const best = me && res[me] ? res[me][t.id] : undefined;
+      const info = best === undefined ? "Hali yechilmagan" : `Eng yaxshi: ${best} / ${t.q.length} · ${gems(best)} 💎`;
+      return `<div class="test">
+        <div class="ic" style="background:${t.col}">${t.ic}</div>
+        <h3>${t.t}</h3>
+        <div class="best">${info}</div>
+        <button class="go" data-i="${i}" ${me ? '' : 'disabled'}>${best === undefined ? 'Boshlash' : 'Qayta yechish'}</button>
+      </div>`;
+    }).join('');
+  }
+  $('tests').addEventListener('click', e => {
+    const b = e.target.closest('.go'); if (!b || b.disabled) return;
+    startQuiz(+b.dataset.i);
+  });
+
+  /* ====== Test jarayoni ====== */
+  let cur = null;
+  const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+  function startQuiz(i) {
+    const t = tests[i];
+    cur = { i, t, n: 0, right: 0, order: shuffle(t.q) };
+    $('quiz').classList.add('open');
+    showQuestion();
+  }
+
+  function showQuestion() {
+    const { t, n, order } = cur;
+    const [text, opts, ok] = order[n];
+    const list = shuffle(opts.map((o, k) => ({ o, ok: k === ok })));
+    $('qbox').innerHTML = `
+      <div class="qtop"><span>${t.t}</span><span>${n + 1} / ${order.length}</span></div>
+      <div class="pbar"><span style="width:${(n / order.length) * 100}%"></span></div>
+      <div class="q">${text}</div>
+      <div class="opts">${list.map((x, k) => `<button class="opt" data-ok="${x.ok}">${x.o}</button>`).join('')}</div>
+      <div class="fb" id="fb" role="status"></div>
+      <div class="actions"><button class="btn ghost" id="quit">Chiqish</button><button class="btn" id="next" style="display:none">${n + 1 === order.length ? 'Natijani ko\'rish' : 'Keyingisi'}</button></div>`;
+    $('quit').onclick = closeQuiz;
+    $('next').onclick = () => { cur.n++; cur.n < order.length ? showQuestion() : finish(); };
+    document.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => answer(b)));
+  }
+
+  function answer(btn) {
+    const good = btn.dataset.ok === 'true';
+    document.querySelectorAll('.opt').forEach(o => {
+      o.disabled = true;
+      if (o.dataset.ok === 'true') o.classList.add('ok');
+    });
+    if (good) cur.right++; else btn.classList.add('no');
+    $('fb').style.color = good ? 'var(--ok)' : 'var(--bad)';
+    $('fb').textContent = good ? "To'g'ri! Barakalla." : "Bu safar xato. To'g'ri javob yashil rangda.";
+    $('next').style.display = '';
+    $('next').focus();
+  }
+
+  function finish() {
+    const { t, right, order } = cur;
+    res[me] = res[me] || {};
+    const before = res[me][t.id] === undefined ? 0 : gems(res[me][t.id]);
+    if (res[me][t.id] === undefined || right > res[me][t.id]) res[me][t.id] = right;
+    store.set('sinf_res', res);
+    const earned = gems(res[me][t.id]) - before;
+    const shown = gems(right);
+    const msg = right === order.length ? "Mukammal natija! Hammasi to'g'ri." : right >= 3 ? "Yaxshi natija!" : "Yana urinib ko'ring, albatta uddalaysiz.";
+    $('qbox').innerHTML = `
+      <div class="result">
+        <h3>${right} / ${order.length} to'g'ri</h3>
+        <p>${msg}</p>
+        <div class="gems" aria-hidden="true">${Array.from({ length: shown }, (_, k) => `<span style="animation-delay:${k * 0.12}s">💎</span>`).join('') || '—'}</div>
+        <p><b>${earned > 0 ? '+' + earned : '0'} 💎</b> hisobingizga qo'shildi${earned === 0 && shown > 0 ? " (oldingi natijangiz bundan yaxshi yoki teng)" : ''}</p>
+        <p style="color:var(--dim)">Jami: ${diamonds(me)} 💎</p>
+        <div class="actions" style="justify-content:center"><button class="btn ghost" id="again">Qayta yechish</button><button class="btn" id="done">Testlarga qaytish</button></div>
+      </div>`;
+    $('again').onclick = () => startQuiz(cur.i);
+    $('done').onclick = closeQuiz;
+    renderAll();
+  }
+
+  function closeQuiz() { $('quiz').classList.remove('open'); cur = null; renderAll(); }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && cur) closeQuiz(); });
+
+  $('reset').addEventListener('click', () => {
+    if (confirm("Sinfdagi hamma natija o'chiriladi. Davom etasizmi?")) { res = {}; store.set('sinf_res', res); renderAll(); }
+  });
+
+  function renderAll() { renderBoard(); renderTests(); }
+  renderAll();
+</script>
+</body>
+</html>
